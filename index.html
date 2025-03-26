@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EtkiyeTepki</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+        }
+        .gallery {
+            column-count: 3;
+            column-gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gallery img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+        }
+        .gallery img.loaded {
+            opacity: 1;
+        }
+        @media (max-width: 600px) {
+            .gallery {
+                column-count: 1;
+            }
+        }
+        #loader {
+            text-align: center;
+            padding: 20px;
+            color: #e0e0e0;
+            display: none;
+        }
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>EtkiyeTepki</h1>
+    <div class="gallery" id="gallery"></div>
+    <div id="loader">Yükleniyor...</div>
+
+    <script>
+        let imageList = [];
+        let loadedImages = 0;
+        const imagesPerLoad = 3;
+
+        fetch('images.json')
+            .then(response => {
+                if (!response.ok) throw new Error('images.json yüklenemedi');
+                return response.json();
+            })
+            .then(data => {
+                imageList = data.images;
+                loadImages();
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                document.getElementById('loader').textContent = 'Görseller yüklenemedi.';
+            });
+
+        function loadImages() {
+            const gallery = document.getElementById('gallery');
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+
+            const endIndex = Math.min(loadedImages + imagesPerLoad, imageList.length);
+            for (let i = loadedImages; i < endIndex; i++) {
+                const img = document.createElement('img');
+                img.setAttribute('loading', 'lazy');
+                img.src = imageList[i];
+                img.alt = 'Türkiye\'deki Protestolar';
+                img.onload = () => img.classList.add('loaded');
+                gallery.appendChild(img);
+            }
+            loadedImages = endIndex;
+            loader.style.display = 'none';
+
+            if (loadedImages >= imageList.length) {
+                observer.disconnect();
+            }
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                loadImages();
+            }
+        }, { threshold: 0.1 });
+
+        observer.observe(document.getElementById('loader'));
+    </script>
+</body>
+</html>
