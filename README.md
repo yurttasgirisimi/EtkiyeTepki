@@ -1,6 +1,6 @@
 # EtkiyeTepki
 
-**EtkiyeTepki**, Türkiye'deki protestoların görüntülerini bir araya getiren, Pinterest tarzı sonsuz kaydırmalı bir fotoğraf galerisi projesidir.
+**EtkiyeTepki**, Türkiye'deki protestoların görüntülerini bir araya getiren, açık kaynaklı arşiv amaçlı bir fotoğraf galerisi projesidir.
 
 ## Özellikler
 - **Anlık Yükleme**: Görseller, yalnızca göründükleri anda yüklenir, böylece sayfa hızlı açılır.
